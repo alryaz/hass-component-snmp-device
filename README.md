@@ -13,7 +13,7 @@ _Add printer-related sensors for SNMP-supporting devices._
 6. Add new sensor based on the following configuration example:
 ```yaml
 - platform: snmp_printer
-  # Prefix name for added sensors
+  # Prefix name for added sensors (optional)
   name: Test Printer
   # Printer host (required)
   host: test-printer.lan

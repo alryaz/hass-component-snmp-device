@@ -5,5 +5,5 @@
     "homeassistant": "0.96.0",
     "iot_class": "Local Polling",
     "zip_release": false,
-    "render_readme": true
+    "render_readme": false
 }
