@@ -4,47 +4,9 @@ from enum import IntEnum
 __all__ = ["SENSOR_OID_DEFINITIONS", "SuppliesClass", "SuppliesType", "DEFAULT_SUPPLIES_ICON", "SUPPLIES_ICONS", "CapacityLevelType", "PrinterStatus", "DeviceStatus", "PaperInputType"]
 
 from homeassistant.const import (
-    
+    STATE_UNKNOWN
 )
 
-CAPACITY_LEVEL_TYPE = lambda x: CapacityLevelType(x) if int(x) < 0 else int(x)
-SENSOR_OID_DEFINITIONS = {
-    'info': ({
-        'model': ('1.3.6.1.2.1.25.3.2.1.3.1', str, STATE_UNKNOWN),
-        'device_id': ('1.3.6.1.2.1.25.3.2.1.4.1', str, STATE_UNKNOWN),
-        'mileage': ('1.3.6.1.2.1.43.10.2.1.4.1.1',int, 0),
-        'printer_status': ('1.3.6.1.2.1.25.3.5.1.1.1', PrinterStatus, PrinterStatus.UNKNOWN),
-        'device_status': ('1.3.6.1.2.1.25.3.2.1.5.1', DeviceStatus, DeviceStatus.UNKNOWN)
-    }, dict),
-    'network_info': ({
-        '_index': ('1.3.6.1.2.1.2.2.1.2', str),
-        'phys_address': ('1.3.6.1.2.1.2.2.1.6', str),
-    }, dict),
-    
-    'supplies': ({
-        '_index': True,
-        #'marker_index': ('1.3.6.1.2.1.43.11.1.1.2.1', int, STATE_UNKNOWN),
-        'colorant_index': ('1.3.6.1.2.1.43.11.1.1.3.1', int, STATE_UNKNOWN),
-        'description': ('1.3.6.1.2.1.43.11.1.1.6.1', str, STATE_UNKNOWN),
-        'class': ('1.3.6.1.2.1.43.11.1.1.4.1', SuppliesClass, SuppliesClass.UNKNOWN),
-        'type': ('1.3.6.1.2.1.43.11.1.1.5.1', SuppliesType, SuppliesType.UNKNOWN),
-        'capacity': ('1.3.6.1.2.1.43.11.1.1.8.1', CAPACITY_LEVEL_TYPE, CapacityLevelType.UNKNOWN),
-        'level': ('1.3.6.1.2.1.43.11.1.1.9.1', CAPACITY_LEVEL_TYPE, CapacityLevelType.UNKNOWN),
-    }, dict),
-
-    'colorants': ({
-        '_index': True,
-        #'marker_index': ('1.3.6.1.2.1.43.12.1.1.2', int),
-        'color': ('1.3.6.1.2.1.43.12.1.1.4', str),
-    }, dict),
-    'paper_inputs': ({
-        '_index': True,
-        'type': ('1.3.6.1.2.1.43.8.2.1.2.1', PaperInputType),
-        'capacity': ('1.3.6.1.2.1.43.8.2.1.9.1', int),
-        'level': ('1.3.6.1.2.1.43.8.2.1.10.1', int),
-        'model': ('1.3.6.1.2.1.43.8.2.1.18.1', str),
-    }, list)
-}
 
 def key_tuple_to_tuple_keys(dict):
     return {
@@ -55,6 +17,7 @@ def key_tuple_to_tuple_keys(dict):
 
 class SuppliesClass(IntEnum):
     OTHER = 1
+    UNKNOWN = 2
     CONSUMABLE = 3
     RECEPTACLE = 4
 
@@ -135,3 +98,41 @@ class PaperInputType(IntEnum):
     SHEET_FEED_MANUAL = 5
     CONTINUOUS_ROLL = 6
     CONTINUOUS_FAN_FOLD = 7
+
+CAPACITY_LEVEL_TYPE = lambda x: CapacityLevelType(x) if int(x) < 0 else int(x)
+SENSOR_OID_DEFINITIONS = {
+    'info': ({
+        'model': ('1.3.6.1.2.1.25.3.2.1.3.1', str, STATE_UNKNOWN),
+        'device_id': ('1.3.6.1.2.1.25.3.2.1.4.1', str, STATE_UNKNOWN),
+        'mileage': ('1.3.6.1.2.1.43.10.2.1.4.1.1',int, 0),
+        'printer_status': ('1.3.6.1.2.1.25.3.5.1.1.1', PrinterStatus, PrinterStatus.UNKNOWN),
+        'device_status': ('1.3.6.1.2.1.25.3.2.1.5.1', DeviceStatus, DeviceStatus.UNKNOWN)
+    }, dict),
+    'network_info': ({
+        '_index': ('1.3.6.1.2.1.2.2.1.2', str),
+        'phys_address': ('1.3.6.1.2.1.2.2.1.6', str),
+    }, dict),
+    'supplies': ({
+        '_index': True,
+        #'marker_index': ('1.3.6.1.2.1.43.11.1.1.2.1', int, STATE_UNKNOWN),
+        'colorant_index': ('1.3.6.1.2.1.43.11.1.1.3.1', int, STATE_UNKNOWN),
+        'description': ('1.3.6.1.2.1.43.11.1.1.6.1', str, STATE_UNKNOWN),
+        'class': ('1.3.6.1.2.1.43.11.1.1.4.1', SuppliesClass, SuppliesClass.UNKNOWN),
+        'type': ('1.3.6.1.2.1.43.11.1.1.5.1', SuppliesType, SuppliesType.UNKNOWN),
+        'capacity': ('1.3.6.1.2.1.43.11.1.1.8.1', CAPACITY_LEVEL_TYPE, CapacityLevelType.UNKNOWN),
+        'level': ('1.3.6.1.2.1.43.11.1.1.9.1', CAPACITY_LEVEL_TYPE, CapacityLevelType.UNKNOWN),
+    }, dict),
+
+    'colorants': ({
+        '_index': True,
+        #'marker_index': ('1.3.6.1.2.1.43.12.1.1.2', int),
+        'color': ('1.3.6.1.2.1.43.12.1.1.4', str),
+    }, dict),
+    'paper_inputs': ({
+        '_index': True,
+        'type': ('1.3.6.1.2.1.43.8.2.1.2.1', PaperInputType),
+        'capacity': ('1.3.6.1.2.1.43.8.2.1.9.1', int),
+        'level': ('1.3.6.1.2.1.43.8.2.1.10.1', int),
+        'model': ('1.3.6.1.2.1.43.8.2.1.18.1', str),
+    }, list)
+}
