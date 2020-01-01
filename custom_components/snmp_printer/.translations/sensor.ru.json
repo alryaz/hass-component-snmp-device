@@ -1,0 +1,18 @@
+{
+    "state": {
+            "idle": "Ожидание",
+            "available": "Доступно",
+            "warning": "Предупреждение",
+            "down": "Недоступно",
+            "unknown": "Неизвестно"
+    },
+    "state_attributes": {
+        "model": "Модель",
+        "type": "Тип",
+        "printerSstatus": "Статус Принтера",
+        "device_status": "Статус Устройства",
+        "current_level": "Текущий Уровень",
+        "max_capacity": "Максимальная Ёмкость",
+        "color": "Цвет"
+    }
+}

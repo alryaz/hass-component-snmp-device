@@ -1,0 +1,6 @@
+{
+    "name": "SNMP Printer",
+    "content_in_root": false,
+    "domains": ["sensor"],
+    "homeassistant": "0.96.0"
+}

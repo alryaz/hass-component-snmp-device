@@ -1,0 +1,12 @@
+{
+    "domain": "snmp_printer",
+    "name": "SNMP Printer",
+    "documentation": "https://www.home-assistant.io/integrations/snmp_printer",
+    "requirements": [
+        "pysnmp==4.4.4"
+    ],
+    "dependencies": [],
+    "codeowners": [
+        "@alryaz"
+    ]
+}
