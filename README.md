@@ -1,8 +1,6 @@
 # hass-snmp-printer-sensor
 
-[![GitHub Release][releases-shield]][releases] [![GitHub Activity][commits-shield]][commits] 
-[![hacs][hacsbadge]](hacs) 
-![Project Maintenance][maintenance-shield] 
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 
 _Add printer-related sensors for SNMP-supporting devices._
 
@@ -15,13 +13,23 @@ _Add printer-related sensors for SNMP-supporting devices._
 6. Add new sensor based on the following configuration example:
 ```yaml
 - platform: snmp_printer
+  # Prefix name for added sensors
   name: Test Printer
+  # Printer host (required)
   host: test-printer.lan
+  # Printer SNMP port (optional, default: 161)
+  port: 161
+  # Printer SNMP community (optional, default: 'public')
   community: public
-  version: '2c'
+  # Printer SNMP version (optional, default: '2c')
+  version: '1'
+  # Timeout to get values (optional, default: '1')
   timeout: 1
 ```
 7. Restart HomeAssistant
+
+## Quirks
+- Sensors are not retained over HomeAssistant restarts (although their data is), and will be inexistent if the printer is offline at boot
 
 ## Roadmap
 - Port more options to configure SNMP requests
