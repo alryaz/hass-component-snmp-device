@@ -122,7 +122,6 @@ class PrinterDetectedErrorState(_FriendlyEnum):
     @classmethod
     def decode(cls, error_value: 'univ.OctetString'):
         converted_error = sum(error_value)
-        print(type(error_value),  str(error_value), converted_error)
         return [e for e in cls if e.value & converted_error]
 
 # https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib
