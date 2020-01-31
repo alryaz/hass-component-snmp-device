@@ -1,0 +1,51 @@
+{
+    "title": "SNMP Device",
+    "state": {
+        "idle": "Idle",
+        "available": "Available",
+        "warning": "Warning",
+        "down": "Down",
+        "unknown": "Unknown"
+    },
+    "attributes": {
+        "model": "Model",
+        "type": "Type",
+        "printer_status": "Printer Status",
+        "device_status": "Device Status",
+        "current_level": "Current Level",
+        "max_capacity": "Maximum Capacity",
+        "color": "Color"
+    },
+    "config": {
+        "title": "SNMP Device",
+        "step": {
+            "user": {
+                "title": "SNMP Device Setup",
+                "description": "Configure default SNMP protocol parameters for the device you would like to configure.\n\nAuto-discovery is available (configured entries will be omitted).",
+                "data": {
+                    "version": "SNMP Version",
+                    "community": "SNMP Community",
+                    "port": "SNMP Port",
+                    "skip_discovery": "Skip device discovery"
+                }
+            },
+            "discovered_select": {
+                "title": "Discovered printers",
+                "description": "There are {discovered_num} devices discovered on your network, of which {configured_num} are already configured.\n\nYou can choose one of them, or press confirm to proceed with custom configuration.",
+                "data": {
+                    "host": "Discovered device"
+                }
+            },
+            "device": {
+                "title": "Add SNMP device",
+                "description": "Fill in the form below to add a single device to HomeAssistant.",
+                "data": {
+                    "name": "Device name",
+                    "host": "Device host",
+                    "timeout": "Connection timeout",
+                    "scan_interval": "Update interval (in seconds)"
+                }
+            }
+        }
+    }
+}

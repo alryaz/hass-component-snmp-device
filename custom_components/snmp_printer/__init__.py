@@ -1,1 +1,0 @@
-"""SNMP Printer component"""

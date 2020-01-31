@@ -1,9 +1,9 @@
 {
-    "name": "SNMP Printer",
+    "name": "SNMP Device",
     "content_in_root": false,
     "domains": ["sensor"],
     "homeassistant": "0.96.0",
     "iot_class": "Local Polling",
     "zip_release": false,
-    "render_readme": false
+    "render_readme": false,
 }
