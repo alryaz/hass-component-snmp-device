@@ -65,7 +65,6 @@ SENSOR_OID_DEFINITIONS = {
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(DEVICE_SCHEMA.schema)
 
-
 def level_capacity(level: Union[CapacityLevelType, int], capacity: Union[CapacityLevelType, int]) -> Tuple[Union[str, int], Optional[str], Union[str, int]]:
     unit_of_measurement = None
 
@@ -95,26 +94,25 @@ def pysnmp_get(snmp_engine: 'SnmpEngine', community_obj: 'CommunityData', target
         for oid, converter in sub_keys.values()
     ]
 
-    for (errorIndication,
-         errorStatus,
-         errorIndex,
-         varBindTable) in getCmd(snmp_engine,
+    for (error_indication,
+         error_status,
+         error_index,
+         var_bind_table) in getCmd(snmp_engine,
                                  community_obj,
                                  target_obj,
                                  context_obj,
                                  *var_binds,
                                  lexicographicalMode=False,
                                  lookupMib=False):
-        if errorIndication:
-            _LOGGER.error(errorIndication)
-            break
-        elif errorStatus:
-            _LOGGER.error('%s at %s' % (
-                errorStatus.prettyPrint(),
-                errorIndex and var_binds[int(errorIndex) - 1][0] or '?'
+        if error_indication:
+            raise Exception(error_indication)
+        elif error_status:
+            raise Exception('%s at %s' % (
+                error_status.prettyPrint(),
+                error_index and var_binds[int(error_index) - 1][0] or '?'
             ))
         else:
-            for (oid_obj, val_obj), (sub_key_name, (oid, converter)) in zip(varBindTable, sub_keys.items()):
+            for (oid_obj, val_obj), (sub_key_name, (oid, converter)) in zip(var_bind_table, sub_keys.items()):
                 return_data[sub_key_name] = converter(val_obj)
 
     return return_data
@@ -146,10 +144,9 @@ def pysnmp_next(snmp_engine: 'SnmpEngine', community_obj: 'CommunityData', targe
                                     lookupMib=False):
 
         if error_indication:
-            _LOGGER.error(error_indication)
-            break
+            raise Exception(error_indication)
         elif error_status:
-            _LOGGER.error('%s at %s' % (
+            raise Exception('%s at %s' % (
                 error_status.prettyPrint(),
                 error_index and var_binds[int(error_index) - 1][0] or '?'
             ))
@@ -256,7 +253,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     except Exception as e:
         _LOGGER.warning('Device unavailable, retrying later')
-        _LOGGER.exception('retry reason: %s' % str(e))
+        _LOGGER.debug('retry reason: %s' % str(e))
 
         raise PlatformNotReady
 

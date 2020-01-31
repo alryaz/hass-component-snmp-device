@@ -166,19 +166,24 @@ class SNMPPrinterFlowHandler(config_entries.ConfigFlow):
         )
         transport_target = UdpTransportTarget((host, port))
 
-        retrieved_data = target_class.retrieve_data(snmp_engine, community_data, transport_target)
+        try:
 
-        _LOGGER.debug('Retrieved data during configuration: %s', retrieved_data)
+            retrieved_data = target_class.retrieve_data(snmp_engine, community_data, transport_target)
+            _LOGGER.debug('Retrieved data during configuration: %s', retrieved_data)
 
-        i_c.update({
-            CONF_NAME: user_input.get(CONF_NAME) or device_type.capitalize(),
-            CONF_TYPE: device_type,
-            CONF_HOST: host,
-            CONF_TIMEOUT: user_input[CONF_TIMEOUT],
-            CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL]
-        })
+            i_c.update({
+                CONF_NAME: user_input.get(CONF_NAME) or device_type.capitalize(),
+                CONF_TYPE: device_type,
+                CONF_HOST: host,
+                CONF_TIMEOUT: user_input[CONF_TIMEOUT],
+                CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL]
+            })
 
-        _LOGGER.debug('Final initial config %s' % i_c)
+            _LOGGER.debug('Final initial config %s' % i_c)
+
+        except Exception as e:
+            _LOGGER.exception('Error while connecting to device')
+            return self.async_abort(reason='connection_failed')
 
         return self.async_create_entry(
             title=i_c[CONF_NAME],
