@@ -96,7 +96,7 @@ class SNMPPrinterFlowHandler(config_entries.ConfigFlow):
                 configured_devices = self.hass.data.get(DATA_DEVICE_CONFIGS)
                 discovered_choices = dict()
                 for (host, port), description in all_devices.items():
-                    if configured_devices and (host, port) in configured_devices:
+                    if self._check_entity_exists(host, port):
                         configured_num += 1
                         continue
 
@@ -147,6 +147,9 @@ class SNMPPrinterFlowHandler(config_entries.ConfigFlow):
                 data_schema=vol.Schema(schema)
             )
 
+        if self._check_entity_exists(user_input[CONF_HOST], i_c[CONF_PORT]):
+            return self.async_abort(reason='already_configured')
+
         from pysnmp.hlapi import SnmpEngine, UdpTransportTarget, ContextData, CommunityData
         from importlib import import_module
         if TYPE_CHECKING:
@@ -185,15 +188,32 @@ class SNMPPrinterFlowHandler(config_entries.ConfigFlow):
             _LOGGER.exception('Error while connecting to device')
             return self.async_abort(reason='connection_failed')
 
-        return self.async_create_entry(
+        return self._async_final_create_entry(
             title=i_c[CONF_NAME],
             data=i_c,
+        )
+
+    def _check_entity_exists(self, host, port):
+        for entry in self.hass.config_entries.async_entries(DOMAIN):
+            if entry.data[CONF_HOST] == host and entry.data[CONF_PORT] == port:
+                return True
+        return False
+
+    def _async_final_create_entry(self, title, data):
+        """Return a set of the configured hosts."""
+        _LOGGER.debug('afce %s %s', title, data)
+        if self._check_entity_exists(data[CONF_HOST], data[CONF_PORT]):
+            return self.async_abort(reason='already_configured')
+        
+        return self.async_create_entry(
+            title=title,
+            data=data
         )
 
     async def async_step_import(self, config: ConfigType):
         """Import a config entry from configuration.yaml."""
         _LOGGER.debug('Import entry: %s' % config)
-        return self.async_create_entry(
+        return self._async_final_create_entry(
             title=(config.get(CONF_NAME) or config[CONF_HOST]) + ' (yaml)',
             data={
                 CONF_HOST: config[CONF_HOST],

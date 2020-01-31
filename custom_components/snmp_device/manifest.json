@@ -3,7 +3,7 @@
     "name": "SNMP Device",
     "documentation": "https://github.com/alryaz/hass-component-snmp-device",
     "requirements": [
-        "pysnmp==4.4.4"
+        "pysnmp==4.4.12"
     ],
     "config_flow": true,
     "dependencies": [],

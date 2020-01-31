@@ -253,14 +253,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     except Exception as e:
         _LOGGER.warning('Device unavailable, retrying later')
-        _LOGGER.debug('retry reason: %s' % str(e))
+        _LOGGER.exception('retry reason: %s' % str(e))
 
         raise PlatformNotReady
 
 async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry, async_add_devices):
-    _LOGGER.debug('Setting up entry %s for component %s' % (config_entry.entry_id, SENSOR_DOMAIN))
     host = config_entry.data[CONF_HOST]
     port = config_entry.data[CONF_PORT]
+    _LOGGER.debug('Setting up %s entry %s for %s:%d' % (SENSOR_DOMAIN, config_entry.entry_id, host, port))
     config = hass.data[DATA_DEVICE_CONFIGS][(host, port)]
 
     return await async_setup_platform(
@@ -421,7 +421,7 @@ class _SNMPSensor(RestoreEntity):
             DOMAIN,
             self._host,
             self._port,
-            SENSOR_DOMAIN,
+            self.__class__.__name__,
             self._sensor_type,
         ]
         if self._entity_index is not None:
@@ -502,13 +502,12 @@ class SNMPPrinterSensor(_SNMPSensor):
             'tonality':         ('1.3.6.1.2.1.43.12.1.1.5.1', int),
         },
         ('paper_inputs',        True): {
+            'model':            ('1.3.6.1.2.1.43.8.2.1.18.1', str),
             'type':             ('1.3.6.1.2.1.43.8.2.1.2.1', PaperInputType),
             'unit':             ('1.3.6.1.2.1.43.8.2.1.8.1', CapacityUnitType),
             'capacity':         ('1.3.6.1.2.1.43.8.2.1.9.1', CAPACITY_LEVEL_TYPE),
             'level':            ('1.3.6.1.2.1.43.8.2.1.10.1', CAPACITY_LEVEL_TYPE),
-            'media':            ('1.3.6.1.2.1.43.8.2.1.12.1', lambda x: bytes(x).decode('utf-8')),
-            'serial':           ('1.3.6.1.2.1.43.8.2.1.17.1', str),
-            'model':            ('1.3.6.1.2.1.43.8.2.1.18.1', str),
+            #'media':            ('1.3.6.1.2.1.43.8.2.1.12.1', lambda x: bytes(x).decode('utf-8')),
         },
     }
 
@@ -540,6 +539,7 @@ class SNMPPrinterSensor(_SNMPSensor):
         new_attributes = self._attributes
         new_unit = self._unit_of_measurement
         new_name = self._name
+
         if self._sensor_type == SENSOR_TYPE_STATUS:
             new_name = 'Status'
             sensor_data = new_data['info']
